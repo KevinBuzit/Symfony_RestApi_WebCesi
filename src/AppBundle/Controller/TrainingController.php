@@ -37,6 +37,46 @@ class TrainingController extends Controller
     }
 
     /**
+     * @Rest\Patch(
+     *    path = "/trainings/{id}",
+     *    name = "app_training_update",
+     *    requirements = {"id"="\d+"}
+     * )
+     * @Rest\View(StatusCode = 200)
+     */
+    public function updateAction($id, Request $requset) {
+        $em = $this->getDoctrine()->getManager();
+
+        $training = $em->getRepository('AppBundle:Training')->find($id);
+        $trainingRemote = json_decode($requset->getContent());
+        $training->setTitle($trainingRemote[0]['title']);
+        $training->setCode($trainingRemote[0]['code']);
+        
+        $em->persist($training);
+        $em->flush();
+
+        return $training;
+    }
+
+    /**
+     * @Rest\Delete(
+     *    path = "/trainings/{id}",
+     *    name = "app_training_delete",
+     *    requirements = {"id"="\d+"}
+     * )
+     * @Rest\View(StatusCode = 200)
+     */
+    public function deleteAction($id) {
+        $em = $this->getDoctrine()->getManager();
+        
+        $training = $em->getRepository('AppBundle:Training')->find($id);
+
+        $em->remove($training);
+        $em->flush();
+    }
+
+
+    /**
      * @Rest\Get(
      *    path = "/trainings/{id}",
      *    name = "app_training_get",

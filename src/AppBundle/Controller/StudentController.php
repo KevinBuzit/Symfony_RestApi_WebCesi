@@ -44,20 +44,44 @@ class StudentController extends Controller
      *    requirements = {"id"="\d+"}
      * )
      * @Rest\View(StatusCode = 200)
-     * @ParamConverter("student", class="AppBundle\Entity\Student", converter="fos_rest.request_body")
      */
-    public function updateAction($id ,Student $student) {
+    public function updateAction($id, Request $requset) {
         $em = $this->getDoctrine()->getManager();
-        
-        $stud = $em->getRepository('AppBundle:Student')->find($id);
-        $stud->setName($student->nom);
-        $stud->setFirstname($student->firstname);
-        $stud->setLogin($student->login);
-        $stud->setPassword($student->password);
-        $stud->setRole($student->role);
+
+        $student = $em->getRepository('AppBundle:Student')->find($id);
+        $studentRemote = json_decode($request->getContent(), true);
+
+        $classRemote = $em->getRepository('AppBundle:TrainingClass')->find($studentRemote[0]['training']['id']);
+
+        $student->setName($studentRemote[0]['name']);
+        $student->setFirstname($studentRemote[0]['firstname']);
+        $student->setLogin($studentRemote[0]['login']);
+        $student->setPassword($studentRemote[0]['password']);
+        $student->setRole($studentRemote[0]['role']);
+        $student->setPromotion($classRemote);
+
+
+        $em->persist($student);
 
         $em->flush();
-        return $stud;
+        return $student;
+    }
+
+    /**
+     * @Rest\Delete(
+     *    path = "/students/{id}",
+     *    name = "app_students_delete",
+     *    requirements = {"id"="\d+"}
+     * )
+     * @Rest\View(StatusCode = 200)
+     */
+    public function deleteAction($id) {
+        $em = $this->getDoctrine()->getManager();
+        
+        $student = $em->getRepository('AppBundle:Student')->find($id);
+
+        $em->remove($student);
+        $em->flush();
     }
 
     /**
