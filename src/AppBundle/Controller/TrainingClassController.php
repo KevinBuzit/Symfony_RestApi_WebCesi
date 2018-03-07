@@ -36,6 +36,45 @@ class TrainingClassController extends Controller
     }
 
     /**
+     * @Rest\Patch(
+     *    path = "/trainings/classes/{id}",
+     *    name = "app_trainingClasses_update",
+     *    requirements = {"id"="\d+"}
+     * )
+     * @Rest\View(StatusCode = 200)
+     */
+    public function updateAction($id, Request $requset) {
+        $em = $this->getDoctrine()->getManager();
+
+        $class = $em->getRepository('AppBundle:TrainingClass')->find($id);
+        $classRemote = json_decode($requset->getContent());
+        $class->setCode($classRemote[0]['code']);
+        $class->setYear($classRemote[0]['year']);
+        
+        $em->persist($class);
+        $em->flush();
+
+        return $class;
+    }
+
+    /**
+     * @Rest\Delete(
+     *    path = "/trainings/classes/{id}",
+     *    name = "app_trainingClasses_delete",
+     *    requirements = {"id"="\d+"}
+     * )
+     * @Rest\View(StatusCode = 200)
+     */
+    public function deleteAction(Student $student) {
+        $em = $this->getDoctrine()->getManager();
+        
+        $class = $em->getRepository('AppBundle:TrainingClass')->find($id);
+
+        $em->remove($class);
+        $em->flush();
+    }
+
+    /**
      * @Rest\Get(
      *    path = "/trainingclass/{id}",
      *    name = "app_trainingclass_get",

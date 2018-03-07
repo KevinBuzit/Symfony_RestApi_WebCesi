@@ -37,6 +37,50 @@ class TeacherController extends Controller
     }
 
     /**
+     * @Rest\Patch(
+     *    path = "/teachers/{id}",
+     *    name = "app_teacher_update",
+     *    requirements = {"id"="\d+"}
+     * )
+     * @Rest\View(StatusCode = 200)
+     */
+    public function updateAction($id, Request $request) {
+        $em = $this->getDoctrine()->getManager();
+
+        $teacher = $em->getRepository('AppBundle:Teacher')->find($id);
+
+        $teacherRemote = json_decode($request->getContent(), true);
+
+        $teacher->setName($teacherRemote[0]['name']);
+        $teacher->setFirstname($teacherRemote[0]['firstname']);
+        $teacher->setLogin($teacherRemote[0]['login']);
+        $teacher->setPassword($teacherRemote[0]['password']);
+        $teacher->setRole($teacherRemote[0]['role']);
+
+        $em->persist($teacher);
+        $em->flush();
+
+        return $teacher;
+    }
+
+    /**
+     * @Rest\Delete(
+     *    path = "/teachers/{id}",
+     *    name = "app_teacher_delete",
+     *    requirements = {"id"="\d+"}
+     * )
+     * @Rest\View(StatusCode = 200)
+     */
+    public function deleteAction($id) {
+        $em = $this->getDoctrine()->getManager();
+
+        $teacher = $em->getRepository('AppBundle:Teacher')->find($id);
+
+        $em->remove($teacher);
+        $em->flush();
+    }
+
+    /**
      * @Rest\Get(
      *    path = "/teachers/{id}",
      *    name = "app_teacher_get",

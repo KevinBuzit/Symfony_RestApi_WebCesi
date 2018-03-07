@@ -37,23 +37,25 @@ class ModuleController extends Controller
 
     /**
      * @Rest\Patch(
-     *    path = "/module/{id}",
+     *    path = "/modules/{id}",
      *    name = "app_module_update",
      *    requirements = {"id"="\d+"}
-     * @Rest\View(StatusCode = 201)
-     * @ParamConverter("module", class="AppBundle\Entity\Module", converter="fos_rest.request_body")
+     * )
+     * @Rest\View(StatusCode = 200)
      */
-    public function updateAction($id, Module $module) {
+    public function updateAction($id,Request $request) {
         $em = $this->getDoctrine()->getManager();
-        $mod = $em->getRepository('AppBundle:Module')->find($id);
-        $mod->setTitle($module->title);
-        $mod->setContent($module->content);
-        $mod->setTraining($module->training);
-        $mod->setTeacher($module->teachers);
+        $module = $em->getRepository('AppBundle:Module')->find($id);
+        $remoteModule = json_decode($request->getContent(), true);
+        
+        $module->setTitle($remoteModule[0]['title']);
+        $module->setContent($remoteModule[0]['content']);
+
+        $em->persist($module);
 
         $em->flush();
 
-        return $mod;
+        return $module;
     }
 
     /**
@@ -131,6 +133,31 @@ class ModuleController extends Controller
     }
 
     /**
+     * @Rest\Patch(
+     *    path = "/marks/valid",
+     *    name = "app_training_validmark"
+     * )
+     * @Rest\View(StatusCode = 200)
+     */
+    public function validMarkAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+
+        $remoteStutentModuleArray = json_decode($request->getContent(), true);
+
+        foreach($remoteStutentModuleArray as $remoteStutentModule){
+            $studentModule = $em->getRepository('AppBundle:StudentModule')->find(
+                $em->getRepository('AppBundle:Module')->find($remoteStutentModule['module']['id']),
+                $em->getRepository('AppBundle:Student')->find($remoteStutentModule['student']['id'])
+            );
+            $studentModule->setIsValid(1);
+            $em->persist($studentModule);
+        }
+
+        $em->flush();
+        return $remoteStutentModuleArray;
+    }
+
+    /**
      * @Rest\Post(
      *    path = "/addteacher",
      *    name = "app_training_addteacher"
@@ -150,6 +177,25 @@ class ModuleController extends Controller
         $em->flush();
 
         return $myarr;
+    }
+
+    /**
+     * @Rest\Delete(
+     *    path = "/deleteteacher",
+     *    name = "app_training_deleteteacher"
+     * )
+     * @Rest\View(StatusCode = 200)
+     */
+    public function updateTeacherAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $modulesTeacherRemote = json_decode($request->getContent(), true);
+
+        $moduleTeacher = $em->getRepository('AppBundle:ModuleTeacher')->find(
+            $em->getRepository('AppBundle:Module')->find($modulesTeacherRemote[0]['module']['id']),
+            $em->getRepository('AppBundle:Student')->find($modulesTeacherRemote[0]['student']['id'])    
+        );
+        $em->remove($moduleTeacher);
+        $em->fetch();
     }
 
     /**
