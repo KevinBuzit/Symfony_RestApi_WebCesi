@@ -73,35 +73,6 @@ class StudentController extends Controller
     }
 
     /**
-     * @Rest\Get("/trainingstudents/{id}", 
-     *    name="app_students_marks",
-     *    requirements = {"id"="\d+"})
-     * 
-     * @Rest\View(StatusCode = 200)
-     */
-    public function getMarksAction(Student $students)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $id = $students->getId();
-        
-        $query = $em->createQuery(
-            'SELECT t.id AS idTraining, c.code, c.year, s.name, s.firstname, s.id AS idStudent
-             FROM AppBundle\Entity\Training t
-             JOIN t.trainingClass c
-             JOIN c.students s
-             WHERE t.id=?1');
-        $query->setParameter(1, $id);
-        $result = $query->getResult();
-        
-        $data = $this->get('jms_serializer')->serialize($result, 'json');
-
-        $response = new Response($data);
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
-    }
-
-    /**
      * @Rest\Options("/students", name="app_eleve_options")
      * 
      * @rest\View(StatusCode = 200)
