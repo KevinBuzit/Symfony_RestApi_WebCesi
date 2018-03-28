@@ -28,16 +28,21 @@ class StudentModule
      * @ORM\JoinColumn(name="idModule", referencedColumnName="id")
      * @Serializer\Type("Entity<AppBundle\Entity\Module>")
      * @Serializer\SerializedName("idModule")
+     * 
+     * @Serializer\Groups({"marks"})
      */
     private $module;
 
     /**
      * @ORM\Column(type="float", length=100)
+     * 
+     * @Serializer\Groups({"marks"})
      */
     private $note;
 
     /**
      * @ORM\Column(type="string")
+     * @Serializer\Groups({"marks"})
      */
     private $comment;
 
@@ -47,6 +52,8 @@ class StudentModule
      * @Serializer\Groups({"get"})
      * @Serializer\SerializedName("moduleDate")
      * @Serializer\Type("DateTime<'d-m-Y'>")
+     * 
+     * @Serializer\Groups({"marks"})
      */
     private $moduleDate;
 
@@ -55,6 +62,8 @@ class StudentModule
      * 
      * @Serializer\Groups({"get"})
      * @Serializer\SerializedName("isRemedial")
+     * 
+     * @Serializer\Groups({"marks"})
      */
     private $isRemedial;
 
