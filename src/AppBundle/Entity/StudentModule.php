@@ -18,6 +18,8 @@ class StudentModule
      * @ORM\JoinColumn(name="idStudent", referencedColumnName="id")
      * @Serializer\Type("Entity<AppBundle\Entity\Student>")
      * @Serializer\SerializedName("idStudent")
+     * 
+     * @Serializer\Groups({"studentMark"})
      */
     private $students;
 
