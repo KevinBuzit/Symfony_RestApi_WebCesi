@@ -131,6 +131,24 @@ class TrainingClassController extends Controller
     }
 
     /**
+     * @Rest\Get(
+     *    path = "/trainingclassmarks/{id}",
+     *    name = "app_module_get",
+     *    requirements = {"id"="\d+"}
+     * )
+     * @Rest\View(StatusCode = 200)
+     */
+    public function getAllTrainingClassMarksAction(TrainingClass $trainingclass)
+    {
+        $data = $this->get('jms_serializer')->serialize($trainingclass, 'json', SerializationContext::create()->setGroups(array('Students','marks','get_student')));
+
+        $response = new Response($data);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
      * @Rest\Options("/trainingclass", name="app_promotion_options")
      * 
      * @rest\View(StatusCode = 200)

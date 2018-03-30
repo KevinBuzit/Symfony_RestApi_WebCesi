@@ -138,6 +138,24 @@ class ModuleController extends Controller
     }
 
     /**
+     * @Rest\Get(
+     *    path = "/modulemarks/{id}",
+     *    name = "app_module_get",
+     *    requirements = {"id"="\d+"}
+     * )
+     * @Rest\View(StatusCode = 200)
+     */
+    public function getMarksAction(Module $module)
+    {
+        $data = $this->get('jms_serializer')->serialize($module, 'json', SerializationContext::create()->setGroups(array('marks','studentMark')));
+
+        $response = new Response($data);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
      * @Rest\Options("/modules", name="app_module_options")
      * 
      * @rest\View(StatusCode = 200)

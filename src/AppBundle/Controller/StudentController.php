@@ -76,6 +76,24 @@ class StudentController extends Controller
     }
 
     /**
+     * @Rest\Get(
+     *    path = "/studentsmarks/{id}",
+     *    name = "app_students_get",
+     *    requirements = {"id"="\d+"}
+     * )
+     * @Rest\View(StatusCode = 200)
+     */
+    public function studentMarksAction(Student $students)
+    {
+        $data = $this->get('jms_serializer')->serialize($students, 'json', SerializationContext::create()->setGroups(array('get_student','marks','TrainingClass')));
+
+        $response = new Response($data);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    /**
      * @Rest\Options("/students", name="app_eleve_options")
      * 
      * @rest\View(StatusCode = 200)

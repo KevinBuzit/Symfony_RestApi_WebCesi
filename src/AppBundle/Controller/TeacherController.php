@@ -81,7 +81,7 @@ class TeacherController extends Controller
      * 
      * @Rest\View(StatusCode = 200)
      */
-    public function getMarksAction(Teacher $teacher)
+    public function getModulesAction(Teacher $teacher)
     {
         $em = $this->getDoctrine()->getManager();
         $id = $teacher->getId();

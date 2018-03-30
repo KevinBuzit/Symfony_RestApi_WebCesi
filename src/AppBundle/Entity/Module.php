@@ -48,6 +48,13 @@ class Module
      */
     private $teachers;
 
+    /**
+     * @ORM\OneToMany(targetEntity="StudentModule", mappedBy="module", cascade={"persist"})
+     * 
+     * @Serializer\Groups({"marks"})
+     */
+    private $marks;
+
 
     public function getId()
     {
