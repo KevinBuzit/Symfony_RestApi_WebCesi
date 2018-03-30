@@ -29,6 +29,9 @@ class StudentController extends Controller
         foreach($myarr as $student)
         {
             $student->setRole('Student');
+            $password = $student->getPassword();
+            $password = hash('sha256', $password);
+            $student->setPassword($password);
             $em->persist($student);
         }
 

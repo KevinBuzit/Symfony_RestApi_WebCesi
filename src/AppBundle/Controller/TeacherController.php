@@ -28,6 +28,9 @@ class TeacherController extends Controller
         foreach($myarr as $teacher)
         {
             $teacher->setRole('Teachers');
+            $password = $teacher->getPassword();
+            $password = hash('sha256', $password);
+            $teacher->setPassword($password);
             $em->persist($teacher);
         }
 

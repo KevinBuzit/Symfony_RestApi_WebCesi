@@ -16,21 +16,21 @@ class Student
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * 
-     * @Serializer\Groups({"id_student","get_student"})
+     * @Serializer\Groups({"id_student","get_student","get_login"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
      * 
-     * @Serializer\Groups({"get_student"})
+     * @Serializer\Groups({"get_student","get_login"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=100)
      * 
-     * @Serializer\Groups({"get_student"})
+     * @Serializer\Groups({"get_student","get_login"})
      */
     private $firstname;
 
@@ -51,7 +51,7 @@ class Student
     /**
      * @ORM\Column(type="string", length=100)
      * 
-     * @Serializer\Groups({"connection"})
+     * @Serializer\Groups({"connection","get_login"})
      */
     private $role;
 
